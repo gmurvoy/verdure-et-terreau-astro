@@ -75,17 +75,44 @@ const gridImgs = d.gallery_layout === 'grid'
           )}
 
           {d.gallery_groups && (
-            <div class="svc-gallery-groups">
-              {(d.gallery_groups as any[]).map((g: any) => (
-                <div class="gallery-group">
-                  <h3>{g.title}</h3>
-                  <div class="gallery-group__imgs">
-                    <img src={g.before} alt="" loading="lazy" />
-                    <img src={g.after} alt="" loading="lazy" />
+            <>
+              <div class="svc-gallery-groups">
+                {(d.gallery_groups as any[]).map((g: any, i: number) => (
+                  <div class="gallery-group">
+                    <h3>{g.title}</h3>
+                    <div
+                      class="gallery-group__imgs lb-trigger"
+                      data-lb-idx={i}
+                      data-lb-title={g.title}
+                    >
+                      <img src={g.before} alt={`Avant — ${g.title}`} data-lb-role="before" loading="lazy" />
+                      <img src={g.after}  alt={`Après — ${g.title}`} data-lb-role="after"  loading="lazy" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <!-- Lightbox -->
+              <div id="vt-lightbox" role="dialog" aria-modal="true" aria-label="Galerie avant/après" tabindex="-1">
+                <div id="vt-lb-content">
+                  <p id="vt-lb-title"></p>
+                  <div id="vt-lb-pair">
+                    <figure>
+                      <img id="vt-lb-before" src="" alt="" />
+                      <figcaption>Avant</figcaption>
+                    </figure>
+                    <figure>
+                      <img id="vt-lb-after" src="" alt="" />
+                      <figcaption>Après</figcaption>
+                    </figure>
                   </div>
                 </div>
-              ))}
-            </div>
+                <button id="vt-lb-close" aria-label="Fermer">&times;</button>
+                <button id="vt-lb-prev" aria-label="Précédent"><i class="bi bi-chevron-left"></i></button>
+                <button id="vt-lb-next" aria-label="Suivant"><i class="bi bi-chevron-right"></i></button>
+              </div>
+              <div id="vt-lb-overlay"></div>
+            </>
           )}
 
           <div class="svc-cta">
@@ -142,6 +169,60 @@ const gridImgs = d.gallery_layout === 'grid'
 </Layout>
 
 <script>
+  // ── Lightbox avant/après ──────────────────────────────────
+  (function () {
+    const triggers = [...document.querySelectorAll<HTMLElement>('.lb-trigger')];
+    if (!triggers.length) return;
+
+    const lb      = document.getElementById('vt-lightbox')!;
+    const overlay = document.getElementById('vt-lb-overlay')!;
+    const lbTitle = document.getElementById('vt-lb-title')!;
+    const lbBefore = document.getElementById('vt-lb-before') as HTMLImageElement;
+    const lbAfter  = document.getElementById('vt-lb-after')  as HTMLImageElement;
+    const btnClose = document.getElementById('vt-lb-close')!;
+    const btnPrev  = document.getElementById('vt-lb-prev')!;
+    const btnNext  = document.getElementById('vt-lb-next')!;
+
+    const groups = triggers.map(el => ({
+      title:  el.dataset.lbTitle ?? '',
+      before: (el.querySelector('[data-lb-role="before"]') as HTMLImageElement).src,
+      beforeAlt: (el.querySelector('[data-lb-role="before"]') as HTMLImageElement).alt,
+      after:  (el.querySelector('[data-lb-role="after"]')  as HTMLImageElement).src,
+      afterAlt:  (el.querySelector('[data-lb-role="after"]')  as HTMLImageElement).alt,
+    }));
+
+    let current = 0;
+
+    function show(idx: number) {
+      current = ((idx % groups.length) + groups.length) % groups.length;
+      const g = groups[current];
+      lbTitle.textContent = g.title;
+      lbBefore.src = g.before; lbBefore.alt = g.beforeAlt;
+      lbAfter.src  = g.after;  lbAfter.alt  = g.afterAlt;
+      lb.classList.add('is-open');
+      overlay.classList.add('is-open');
+      lb.focus();
+    }
+
+    function hide() {
+      lb.classList.remove('is-open');
+      overlay.classList.remove('is-open');
+    }
+
+    triggers.forEach((el, i) => el.addEventListener('click', () => show(i)));
+    btnClose.addEventListener('click',  hide);
+    overlay.addEventListener('click',   hide);
+    btnPrev.addEventListener('click',  () => show(current - 1));
+    btnNext.addEventListener('click',  () => show(current + 1));
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('is-open')) return;
+      if (e.key === 'Escape')     hide();
+      if (e.key === 'ArrowLeft')  show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
+  })();
+
+  // ── Filtrage parcours scolaire ────────────────────────────
   const filterBtns  = document.querySelectorAll<HTMLButtonElement>('.parcours-filter-btn');
   const filterItems = document.querySelectorAll<HTMLElement>('.parcours-item');
 
@@ -246,14 +327,122 @@ const gridImgs = d.gallery_layout === 'grid'
     display: flex;
     gap: 1rem;
   }
-  .gallery-group__imgs img {
+  .lb-trigger { cursor: pointer; }
+  .lb-trigger img {
     flex: 1 1 0;
     min-width: 0;
     height: 260px;
     width: auto;
     object-fit: cover;
     display: block;
+    transition: opacity 0.2s;
   }
+  .lb-trigger:hover img { opacity: 0.88; }
+
+  /* ===== LIGHTBOX ===== */
+  #vt-lb-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 9000;
+  }
+  #vt-lb-overlay.is-open { display: block; }
+
+  #vt-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9001;
+    align-items: center;
+    justify-content: center;
+  }
+  #vt-lightbox.is-open { display: flex; }
+
+  #vt-lb-content {
+    position: relative;
+    max-width: min(90vw, 900px);
+    max-height: 90vh;
+    overflow: auto;
+    background: #fff;
+    border-radius: 4px;
+    padding: 2rem 2rem 1.5rem;
+  }
+
+  #vt-lb-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--vt-olive);
+    margin: 0 0 1.25rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  #vt-lb-pair {
+    display: flex;
+    gap: 1.5rem;
+  }
+  #vt-lb-pair figure {
+    flex: 1;
+    margin: 0;
+    text-align: center;
+  }
+  #vt-lb-pair img {
+    width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    display: block;
+  }
+  #vt-lb-pair figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--vt-mute-2);
+  }
+
+  #vt-lb-close {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.95);
+    border: none;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 9002;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vt-olive);
+  }
+  #vt-lb-close:hover { background: #fff; }
+
+  #vt-lb-prev, #vt-lb-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.95);
+    border: none;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    cursor: pointer;
+    z-index: 9002;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--vt-olive);
+  }
+  #vt-lb-prev:hover, #vt-lb-next:hover { background: #fff; }
+  #vt-lb-prev { left: 1.25rem; }
+  #vt-lb-next { right: 1.25rem; }
 
   /* CTA */
   .svc-cta {
@@ -347,7 +536,11 @@ const gridImgs = d.gallery_layout === 'grid'
     .svc-gallery--grid img { width: 100%; max-width: 300px; }
     .parcours-grid { grid-template-columns: repeat(2, 1fr); }
     .gallery-group__imgs { flex-direction: column; }
-    .gallery-group__imgs img { height: 220px; flex: none; width: 100%; }
+    .lb-trigger img { height: 220px; flex: none; width: 100%; }
+    #vt-lb-pair { flex-direction: column; }
+    #vt-lb-content { padding: 1.25rem 1.25rem 1rem; }
+    #vt-lb-prev { left: 0.5rem; }
+    #vt-lb-next { right: 0.5rem; }
   }
 
   @media (max-width: 480px) {

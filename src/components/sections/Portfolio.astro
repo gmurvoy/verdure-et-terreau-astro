@@ -2,7 +2,7 @@
 import SectionTitle from '../SectionTitle.astro';
 import PortfolioIsland from './PortfolioIsland.tsx';
 
-interface PortfolioItem { id: string; filter: string; img: string; title: string; caption: string; }
+interface PortfolioItem { id: string; filter: string; img: string; img_large: string; title: string; caption: string; }
 interface Filter { id: string; label: string; }
 interface Props {
   eyebrow:      string;
@@ -67,5 +67,54 @@ const { eyebrow, heading, heading_span, sub, filters, items } = Astro.props;
   }
   @media (min-width: 768px) and (max-width: 991px) {
     .vt-portfolio__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── Lightbox portfolio ────────────────────────────────── */
+  .vt-plb-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.9);
+    z-index: 9000;
+  }
+  .vt-plb {
+    position: fixed; inset: 0;
+    z-index: 9001;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2.5rem 5rem;
+  }
+  .vt-plb-img {
+    max-width: 100%; max-height: 72vh;
+    object-fit: contain; display: block; border-radius: 2px;
+  }
+  .vt-plb-info { margin-top: .875rem; text-align: center; }
+  .vt-plb-title {
+    font-family: var(--vt-font-heading);
+    font-size: 1rem; font-weight: 700;
+    color: #fff; margin: 0 0 .2rem;
+  }
+  .vt-plb-caption { font-size: .8rem; color: rgba(255,255,255,.7); margin: 0; }
+
+  .vt-plb-close,
+  .vt-plb-prev,
+  .vt-plb-next {
+    position: fixed;
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,.92);
+    border: none; border-radius: 50%;
+    cursor: pointer; z-index: 9002;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--vt-olive); font-size: 1.4rem;
+    transition: background .15s;
+  }
+  .vt-plb-close:hover,
+  .vt-plb-prev:hover,
+  .vt-plb-next:hover { background: #fff; }
+
+  .vt-plb-close { top: 1.25rem; right: 1.25rem; font-size: 1.7rem; }
+  .vt-plb-prev  { top: 50%; left:  1.25rem; transform: translateY(-50%); }
+  .vt-plb-next  { top: 50%; right: 1.25rem; transform: translateY(-50%); }
+
+  @media (max-width: 768px) {
+    .vt-plb { padding: 2rem 3.5rem; }
   }
 </style>
