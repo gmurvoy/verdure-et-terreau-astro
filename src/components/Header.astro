@@ -1,0 +1,261 @@
+---
+const path = Astro.url.pathname;
+
+const serviceLinks = [
+  { slug: 'initiation',       label: 'Initiation à la Permaculture' },
+  { slug: 'ateliers',         label: 'Ateliers thématiques' },
+  { slug: 'conception',       label: 'Création de potager' },
+  { slug: 'parcours-scolaire', label: 'Parcours scolaire' },
+];
+
+const isServices = path.startsWith('/services');
+---
+
+<!-- TopBar -->
+<section class="vt-topbar">
+  <div class="vt-container vt-topbar__inner">
+    <div class="vt-topbar__info">
+      <span>
+        <i class="bi bi-envelope"></i>
+        <a href="mailto:contact@verdure-et-terreau.fr">contact@verdure-et-terreau.fr</a>
+      </span>
+      <span>
+        <i class="bi bi-phone"></i>
+        +33&nbsp;(0)6&nbsp;62&nbsp;50&nbsp;95&nbsp;68
+      </span>
+    </div>
+    <div class="vt-topbar__socials">
+      <a href="#" title="Facebook" rel="noopener noreferrer"><i class="bi bi-facebook"></i></a>
+      <a href="#" title="Instagram" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a>
+      <a href="#" title="LinkedIn" rel="noopener noreferrer"><i class="bi bi-linkedin"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- Sticky Header -->
+<header class="vt-header" id="vt-header">
+  <div class="vt-container vt-header__inner">
+    <a href="/" class="vt-logo">
+      <img src="/assets/img/logo2.png" alt="Verdure et Terreau" width="50" height="50" />
+      <span>Verdure et Terreau</span>
+    </a>
+
+    <nav class="vt-nav" id="vt-nav" aria-label="Navigation principale">
+      <div class="vt-nav__item">
+        <a class={`vt-nav__link${path === '/' ? ' is-active' : ''}`} href="/">Accueil</a>
+      </div>
+      <div class="vt-nav__item">
+        <a class="vt-nav__link" href="/#about">À propos</a>
+      </div>
+      <div class="vt-nav__item vt-nav__item--has-sub">
+        <a class={`vt-nav__link${isServices ? ' is-active' : ''}`} href="/#services">
+          Services <i class="bi bi-chevron-down"></i>
+        </a>
+        <div class="vt-nav__sub">
+          {serviceLinks.map(s => (
+            <a
+              href={`/services/${s.slug}`}
+              class={path === `/services/${s.slug}` ? 'is-active' : ''}
+            >
+              {s.label}
+            </a>
+          ))}
+        </div>
+      </div>
+      <div class="vt-nav__item">
+        <a class="vt-nav__link" href="/#portfolio">Réalisations</a>
+      </div>
+      <div class="vt-nav__item">
+        <a class="vt-nav__link" href="/#contact">Contact</a>
+      </div>
+    </nav>
+
+    <button class="vt-nav__toggle" id="vt-nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false">
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('vt-nav-toggle') as HTMLButtonElement | null;
+  const nav    = document.getElementById('vt-nav');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = nav?.classList.toggle('is-open') ?? false;
+    toggle.setAttribute('aria-expanded', String(isOpen));
+    toggle.querySelector('i')?.classList.toggle('bi-list', !isOpen);
+    toggle.querySelector('i')?.classList.toggle('bi-x-lg', isOpen);
+  });
+
+  nav?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('is-open');
+      toggle?.setAttribute('aria-expanded', 'false');
+      toggle?.querySelector('i')?.classList.replace('bi-x-lg', 'bi-list');
+    });
+  });
+</script>
+
+<style is:global>
+  /* ===== TOPBAR ===== */
+  .vt-topbar {
+    background: #fff;
+    padding: 10px 0;
+    font-size: 14px;
+    color: var(--vt-mute-3);
+    border-bottom: 1px solid var(--vt-line);
+  }
+  .vt-topbar__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .vt-topbar__info { display: flex; gap: 24px; align-items: center; }
+  .vt-topbar__info span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vt-topbar__info .bi {
+    color: var(--vt-green);
+    font-style: normal;
+    font-size: 15px;
+  }
+  .vt-topbar__info a { color: var(--vt-body); }
+  .vt-topbar__info a:hover { color: var(--vt-green); }
+  .vt-topbar__socials { display: flex; gap: 12px; }
+  .vt-topbar__socials a { color: var(--vt-mute-3); font-size: 15px; }
+  .vt-topbar__socials a:hover { color: var(--vt-green); }
+
+  /* ===== HEADER ===== */
+  .vt-header {
+    background: var(--vt-ink);
+    height: 70px;
+    position: sticky;
+    top: 0;
+    z-index: 997;
+  }
+  .vt-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  /* Logo */
+  .vt-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .vt-logo img { height: 50px; width: auto; }
+  .vt-logo span {
+    font-family: var(--vt-font-display);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #fff;
+  }
+  .vt-logo:hover span { color: var(--vt-green-light); }
+
+  /* Nav */
+  .vt-nav { display: flex; gap: 6px; align-items: center; }
+  .vt-nav__item { position: relative; }
+
+  .vt-nav__link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    font-family: var(--vt-font-display);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    transition: color var(--vt-dur-fast);
+    white-space: nowrap;
+  }
+  .vt-nav__link:hover,
+  .vt-nav__link.is-active { color: var(--vt-green); }
+
+  /* Dropdown */
+  .vt-nav__sub {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    border-radius: var(--vt-radius-sm);
+    box-shadow: var(--vt-shadow-dropdown);
+    padding: 8px 0;
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: all var(--vt-dur-fast);
+    z-index: 99;
+  }
+  .vt-nav__item--has-sub:hover .vt-nav__sub {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .vt-nav__sub a {
+    display: block;
+    padding: 10px 20px;
+    font-family: var(--vt-font-display);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--vt-olive);
+    text-transform: none;
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  .vt-nav__sub a:hover,
+  .vt-nav__sub a.is-active { color: var(--vt-green); }
+
+  /* Hamburger */
+  .vt-nav__toggle {
+    display: none;
+    background: transparent;
+    border: 0;
+    color: #fff;
+    font-size: 28px;
+    padding: 4px;
+    line-height: 1;
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 991px) {
+    .vt-topbar__info span:last-child { display: none; }
+
+    .vt-nav__toggle { display: flex; align-items: center; }
+
+    .vt-nav {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      position: absolute;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: var(--vt-ink);
+      padding: 10px 0 20px;
+      z-index: 996;
+    }
+    .vt-nav.is-open { display: flex; }
+
+    .vt-nav__item { width: 100%; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .vt-nav__link { padding: 14px 24px; }
+
+    .vt-nav__sub {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      box-shadow: none;
+      background: transparent;
+      padding: 0 0 8px 32px;
+      min-width: unset;
+    }
+    .vt-nav__sub a { color: rgba(255,255,255,.7); padding: 8px 20px; }
+    .vt-nav__sub a:hover { color: var(--vt-green-light); }
+  }
+</style>

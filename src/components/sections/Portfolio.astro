@@ -1,0 +1,71 @@
+---
+import SectionTitle from '../SectionTitle.astro';
+import PortfolioIsland from './PortfolioIsland.tsx';
+
+interface PortfolioItem { id: string; filter: string; img: string; title: string; caption: string; }
+interface Filter { id: string; label: string; }
+interface Props {
+  eyebrow:      string;
+  heading:      string;
+  heading_span: string;
+  sub:          string;
+  filters:      Filter[];
+  items:        PortfolioItem[];
+}
+const { eyebrow, heading, heading_span, sub, filters, items } = Astro.props;
+---
+
+<section id="portfolio" class="vt-section vt-section--white">
+  <div class="vt-container">
+    <SectionTitle eyebrow={eyebrow} head={heading} span={heading_span} sub={sub} />
+    <PortfolioIsland filters={filters} items={items} client:load />
+  </div>
+</section>
+
+<style is:global>
+  .vt-portfolio__filters { display: flex; justify-content: center; gap: 8px; padding: 0 0 30px; flex-wrap: wrap; }
+  .vt-portfolio__filter {
+    padding: 8px 18px 10px;
+    font-family: var(--vt-font-body);
+    font-size: 14px; font-weight: 500;
+    background: var(--vt-chip);
+    color: var(--vt-body);
+    border-radius: var(--vt-radius-pill);
+    border: 0; cursor: pointer;
+    transition: all .3s;
+  }
+  .vt-portfolio__filter.is-active,
+  .vt-portfolio__filter:hover { background: var(--vt-green); color: #fff; }
+
+  .vt-portfolio__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+
+  .vt-portfolio-tile { position: relative; overflow: hidden; cursor: pointer; aspect-ratio: 1 / 1; }
+  .vt-portfolio-tile img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block; position: relative; top: 0;
+    transition: top .6s var(--vt-ease);
+  }
+  .vt-portfolio-tile__info {
+    position: absolute; left: 12px; right: 12px; bottom: -50px;
+    background: var(--vt-green);
+    padding: 14px 18px;
+    color: #fff;
+    opacity: 0;
+    transition: all .3s ease-in-out;
+  }
+  .vt-portfolio-tile__info h3 {
+    font-family: var(--vt-font-heading);
+    font-size: 16px; font-weight: 600;
+    color: #fff; margin: 0;
+  }
+  .vt-portfolio-tile__info p { font-size: 13px; color: #fff; margin: 2px 0 0; }
+  .vt-portfolio-tile:hover img { top: -30px; }
+  .vt-portfolio-tile:hover .vt-portfolio-tile__info { opacity: 1; bottom: 0; }
+
+  @media (max-width: 767px) {
+    .vt-portfolio__grid { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .vt-portfolio__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

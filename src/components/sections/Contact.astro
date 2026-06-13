@@ -1,0 +1,147 @@
+---
+import SectionTitle from '../SectionTitle.astro';
+
+interface Props {
+  eyebrow:           string;
+  heading:           string;
+  heading_span:      string;
+  sub:               string;
+  map_img:           string;
+  map_alt:           string;
+  address:           string;
+  email:             string;
+  phone:             string;
+  formspree_id:      string;
+  formspree_redirect: string;
+}
+const {
+  eyebrow, heading, heading_span, sub,
+  map_img, map_alt,
+  address, email, phone,
+  formspree_id, formspree_redirect,
+} = Astro.props;
+---
+
+<section id="contact" class="vt-section vt-section--white">
+  <div class="vt-container">
+    <SectionTitle eyebrow={eyebrow} head={heading} span={heading_span} sub={sub} />
+
+    <!-- Carte -->
+    <div class="vt-contact__map">
+      <img src={map_img} alt={map_alt} loading="lazy" />
+    </div>
+
+    <div class="vt-contact__grid">
+      <!-- Infos de contact -->
+      <div class="vt-contact__info">
+        <div>
+          <i class="bi bi-geo-alt"></i>
+          <h4>Adresse :</h4>
+          <p>{address}</p>
+        </div>
+        <div>
+          <i class="bi bi-envelope"></i>
+          <h4>Email :</h4>
+          <p>{email}</p>
+        </div>
+        <div>
+          <i class="bi bi-phone"></i>
+          <h4>Téléphone :</h4>
+          <p>{phone}</p>
+        </div>
+      </div>
+
+      <!-- Formulaire Formspree -->
+      <form
+        action={`https://formspree.io/f/${formspree_id}`}
+        method="POST"
+        class="vt-contact__form"
+      >
+        <div class="vt-contact__row">
+          <input type="text"  name="name"    placeholder="Nom et Prénom"       required />
+          <input type="email" name="email"   placeholder="Votre adresse mail"  required />
+        </div>
+        <input type="text"     name="subject" placeholder="Objet"              required />
+        <textarea              name="message" rows="5" placeholder="Message"   required></textarea>
+        <input type="hidden"   name="_next"   value={formspree_redirect} />
+        <input type="text"     name="_gotcha" tabindex="-1" aria-hidden="true"
+               style="display:none" />
+        <div class="vt-contact__submit-wrap">
+          <button type="submit" class="vt-contact__submit">Envoyer le message</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .vt-contact__map {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  .vt-contact__map img { width: 100%; display: block; }
+
+  .vt-contact__grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+
+  .vt-contact__info > div {
+    position: relative;
+    padding: 0 0 0 60px;
+    margin-bottom: 28px;
+  }
+  .vt-contact__info i {
+    position: absolute; left: 0; top: 0;
+    width: 44px; height: 44px;
+    background: var(--vt-green-cloud);
+    border-radius: var(--vt-radius-pill);
+    color: var(--vt-green);
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: .3s;
+  }
+  .vt-contact__info > div:hover i { background: var(--vt-green); color: #fff; }
+  .vt-contact__info h4 {
+    font-family: var(--vt-font-heading);
+    font-size: 19px; font-weight: 600;
+    color: var(--vt-olive); margin: 0 0 6px;
+  }
+  .vt-contact__info p { font-size: 14px; color: var(--vt-muted); margin: 0; }
+
+  .vt-contact__form { display: flex; flex-direction: column; gap: 12px; }
+  .vt-contact__row  { display: flex; gap: 12px; }
+  .vt-contact__row > * { flex: 1; }
+
+  .vt-contact__form input,
+  .vt-contact__form textarea {
+    width: 100%;
+    height: 44px;
+    border: 1px solid #ced4da;
+    padding: 0 14px;
+    font-family: var(--vt-font-body);
+    font-size: 14px;
+    color: var(--vt-body);
+    background: #fff;
+    border-radius: 0;
+  }
+  .vt-contact__form textarea { padding: 12px 14px; height: 130px; resize: vertical; }
+  .vt-contact__form input:focus,
+  .vt-contact__form textarea:focus { outline: 0; border-color: var(--vt-green); }
+
+  .vt-contact__submit-wrap { text-align: center; }
+  .vt-contact__submit {
+    background: var(--vt-green);
+    color: #fff;
+    padding: 12px 28px;
+    border: 0;
+    border-radius: var(--vt-radius-pill);
+    font-family: var(--vt-font-body);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .4s;
+  }
+  .vt-contact__submit:hover { background: var(--vt-green-dark); }
+
+  @media (max-width: 767px) {
+    .vt-contact__grid { grid-template-columns: 1fr; }
+    .vt-contact__row  { flex-direction: column; }
+  }
+</style>

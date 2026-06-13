@@ -1,0 +1,58 @@
+---
+interface Props {
+  heading:    string;
+  subheading: string;
+  cta_label:  string;
+  cta_href:   string;
+}
+const { heading, subheading, cta_label, cta_href } = Astro.props;
+---
+
+<section id="hero" class="vt-hero">
+  <div class="vt-hero__inner">
+    <h1>{heading}</h1>
+    <h2>{subheading}</h2>
+    <a href={cta_href} class="vt-btn">{cta_label}</a>
+  </div>
+</section>
+
+<style is:global>
+  .vt-hero {
+    width: 100%;
+    height: 60vh;
+    min-height: 420px;
+    background: url('/assets/img/logo-bg.png') top center / cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 24px;
+  }
+  @media (min-width: 1024px) {
+    .vt-hero { background-attachment: fixed; }
+  }
+  .vt-hero__inner { max-width: 800px; }
+  .vt-hero h1 {
+    font-family: var(--vt-font-heading);
+    font-size: var(--vt-fs-display);
+    font-weight: 700;
+    color: var(--vt-green);
+    line-height: var(--vt-lh-tight);
+    margin: 0 0 14px;
+    text-shadow: 0 1px 0 rgba(255,255,255,.3);
+  }
+  .vt-hero h2 {
+    font-family: var(--vt-font-heading);
+    font-size: var(--vt-fs-h4);
+    font-weight: 500;
+    color: var(--vt-green);
+    margin: 0 0 36px;
+    max-width: 720px;
+  }
+  .vt-hero .vt-btn { font-size: var(--vt-fs-body); padding: 10px 32px; }
+
+  @media (max-width: 600px) {
+    .vt-hero h1 { font-size: 32px; }
+    .vt-hero h2 { font-size: 18px; }
+  }
+</style>

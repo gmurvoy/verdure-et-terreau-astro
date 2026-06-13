@@ -1,0 +1,104 @@
+---
+import SectionTitle from '../SectionTitle.astro';
+
+interface BulletLabel { label: string; text: string; }
+interface Card {
+  num:           string;
+  title:         string;
+  intro?:        string;
+  paras?:        string[];
+  bullets?:      string[];
+  bullets_label?: BulletLabel[];
+  kicker:        string;
+}
+interface Props {
+  eyebrow:      string;
+  heading:      string;
+  heading_span: string;
+  sub:          string;
+  cards:        Card[];
+}
+const { eyebrow, heading, heading_span, sub, cards } = Astro.props;
+---
+
+<section id="why-us" class="vt-section vt-section--white">
+  <div class="vt-container">
+    <SectionTitle eyebrow={eyebrow} head={heading} span={heading_span} sub={sub} />
+    <div class="vt-whyus__grid">
+      {cards.map(card => (
+        <div class="vt-whyus-card">
+          <span class="vt-whyus-card__num">{card.num}</span>
+          <h3>{card.title}</h3>
+
+          {card.intro && <p>{card.intro}</p>}
+
+          {card.paras && card.paras.map(para => <p>{para}</p>)}
+
+          {card.bullets_label && (
+            <>
+              <p>Mon accompagnement inclut :</p>
+              <ul>
+                {card.bullets_label.map(b => (
+                  <li><span>{b.label}</span> {b.text}</li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {card.bullets && (
+            <ul>
+              {card.bullets.map(b => <li>{b}</li>)}
+            </ul>
+          )}
+
+          {card.kicker && <p><span class="vt-whyus-card__kicker">{card.kicker}</span></p>}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .vt-whyus__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  .vt-whyus-card {
+    background: #fff;
+    padding: 36px 26px;
+    box-shadow: var(--vt-shadow-card);
+    transition: all .3s ease-in-out;
+    font-family: var(--vt-font-body);
+  }
+  .vt-whyus-card__num {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--vt-green);
+  }
+  .vt-whyus-card h3 {
+    font-family: var(--vt-font-heading);
+    font-size: 22px;
+    font-weight: 600;
+    margin: 16px 0 12px;
+    color: var(--vt-olive);
+  }
+  .vt-whyus-card p,
+  .vt-whyus-card li { color: var(--vt-mute-2); font-size: 14px; line-height: 1.55; margin: 0 0 8px; }
+  .vt-whyus-card ul { padding-left: 18px; margin: 6px 0; }
+  .vt-whyus-card li span { font-weight: 700; }
+
+  .vt-whyus-card__kicker { font-style: italic; font-weight: 600; }
+
+  .vt-whyus-card:hover {
+    background: var(--vt-green);
+    padding: 20px 26px 56px;
+    box-shadow: var(--vt-shadow-hover);
+  }
+  .vt-whyus-card:hover * { color: #fff !important; }
+
+  @media (max-width: 991px) {
+    .vt-whyus__grid { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .vt-whyus__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

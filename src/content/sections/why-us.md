@@ -1,0 +1,37 @@
+---
+eyebrow: "Par où commencer ?"
+heading: "Vous souhaitez créer votre espace naturel, mais vous ne savez pas par où commencer ?"
+heading_span: "par où commencer ?"
+sub: "Particulier ou établissement scolaire, je me propose de vous accompagner avec le soutien de la Permaculture comme guide des pratiques vertueuses."
+cards:
+  - num: "01"
+    title: "Accompagnement personnalisé"
+    intro: "Je vous accompagne pas à pas dans la création de votre potager en permaculture, que vous soyez un particulier ou un établissement scolaire. Mon approche est à la fois éducative et écologique, visant à cultiver de manière responsable et durable."
+    bullets_label:
+      - label: "Évaluation et planification :"
+        text: "Analyse de votre espace et élaboration d'un plan personnalisé pour votre potager en permaculture."
+      - label: "Mise en place :"
+        text: "Aide à la préparation du sol, choix des plantes, et installation des systèmes de culture."
+      - label: "Conseils :"
+        text: "Accompagnement pour assurer la croissance de votre potager vers votre autonomie."
+    kicker: "Ensemble, cultivons un avenir plus vert et plus sain, plus naturel et plus respectueux."
+  - num: "02"
+    title: "Enseignement"
+    paras:
+      - "Je vous propose des animations théoriques et pratiques pour comprendre les principes de la permaculture et apprendre les techniques de culture durable de la graine à la graine au fil des saisons. Ces sessions sont adaptées à tout public."
+      - "Que vous souhaitiez faire une initiation à la permaculture sur deux jours ou participer à des ateliers thématiques, l'objectif sera de comprendre les écosystèmes naturels, et les imiter afin de créer un environnement durable et respectueux."
+      - "Vous vous familiariserez avec la préparation du sol, les engrais verts, le compostage, la protection de la faune, la biodiversité, la gestion de l'eau, les principes de conception… Vous pourrez ainsi mettre en œuvre ces techniques chez vous et créer un environnement harmonieux."
+    kicker: "Comprendre son environnement, pour mieux en prendre soin."
+  - num: "03"
+    title: "Les bienfaits"
+    intro: "En choisissant de cultiver avec les principes de la permaculture, nous choisissons :"
+    bullets:
+      - "de contribuer au développement de la biodiversité,"
+      - "d'améliorer notre autonomie alimentaire,"
+      - "de manger sainement,"
+      - "de contribuer à la transition écologique,"
+      - "d'amorcer notre descente énergétique,"
+      - "de réduire nos impacts sur l'environnement,"
+      - "de nous reconnecter avec la nature…"
+    kicker: "Le bon appelle le bon"
+---

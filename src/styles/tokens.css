@@ -1,0 +1,82 @@
+/*
+ * Verdure et Terreau — Design System Tokens
+ * Source : gmurvoy/verdure-et-terreau (DS complet)
+ * Ne jamais modifier ces valeurs sans mettre à jour le DS.
+ */
+
+:root {
+  /* ---- COULEURS DE MARQUE ------------------------------------------- */
+  --vt-green:           #7da15f;
+  --vt-green-bright:    #8fc04e;
+  --vt-green-light:     #a7cd74;
+  --vt-green-soft:      #bfdb99;
+  --vt-green-pale:      #d6e8bf;
+  --vt-green-mist:      #dbefad;
+  --vt-green-tint:      #e5f0d5;
+  --vt-green-cream:     #e9f3dd;
+  --vt-green-cloud:     #f3f8ec;
+  --vt-green-fog:       #f5faf0;
+  --vt-green-dark:      #75a239;
+  --vt-green-darker:    #7aa93c;
+
+  /* ---- NEUTRES ------------------------------------------------------- */
+  --vt-ink:             #0f0f0f;
+  --vt-olive:           #4A4836;
+  --vt-body:            #444444;
+  --vt-muted:           #686868;
+  --vt-mute-2:          #919191;
+  --vt-mute-3:          #9b9b9b;
+  --vt-mute-soft:       #bababa;
+  --vt-line:            #eeeeee;
+  --vt-line-2:          #282828;
+  --vt-chip:            #efefef;
+  --vt-bg:              #ffffff;
+  --vt-bg-soft:         #f9f9f9;
+  --vt-bg-grey:         #f4f4f4;
+
+  /* ---- SÉMANTIQUE ---------------------------------------------------- */
+  --vt-success:         #18d26e;
+  --vt-error:           #ed3c0d;
+
+  /* ---- TYPOGRAPHIE --------------------------------------------------- */
+  --vt-font-body:       "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --vt-font-heading:    "Raleway", "Open Sans", sans-serif;
+  --vt-font-display:    "Poppins", "Raleway", sans-serif;
+
+  --vt-fs-display:      48px;
+  --vt-fs-h1:           36px;
+  --vt-fs-h2:           32px;
+  --vt-fs-h3:           28px;
+  --vt-fs-h4:           24px;
+  --vt-fs-h5:           18px;
+  --vt-fs-body:         16px;
+  --vt-fs-small:        15px;
+  --vt-fs-xs:           14px;
+  --vt-fs-pill:         13px;
+
+  --vt-lh-tight:        1.15;
+  --vt-lh-snug:         1.35;
+  --vt-lh-normal:       1.6;
+
+  --vt-tracking-pill:   1px;
+
+  /* ---- ESPACEMENT / RAYONS / OMBRES ---------------------------------- */
+  --vt-radius-sm:       4px;
+  --vt-radius-md:       8px;
+  --vt-radius-pill:     50px;
+
+  --vt-shadow-card:     0px 2px 15px rgba(0, 0, 0, 0.10);
+  --vt-shadow-hover:    10px 15px 30px rgba(0, 0, 0, 0.18);
+  --vt-shadow-soft:     0px 0px 25px rgba(0, 0, 0, 0.10);
+  --vt-shadow-dropdown: 0px 0px 30px rgba(127, 137, 161, 0.25);
+
+  --vt-overlay-dark:    rgba(2, 2, 2, 0.7);
+  --vt-overlay-darker:  rgba(0, 0, 0, 0.9);
+  --vt-overlay-footer:  rgba(15, 15, 15, 0.75);
+  --vt-overlay-modal:   rgba(28, 28, 28, 0.9);
+
+  --vt-ease:            cubic-bezier(0.645, 0.045, 0.355, 1);
+  --vt-dur-fast:        300ms;
+  --vt-dur-base:        400ms;
+  --vt-dur-slow:        500ms;
+}

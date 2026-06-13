@@ -1,0 +1,131 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="vt-footer">
+  <div class="vt-footer__inner vt-container">
+    <h3 class="vt-footer__title">Verdure et Terreau</h3>
+    <p class="vt-footer__tag">
+      Pour rester informé des dernières actualités,<br />
+      abonnez-vous à la lettre d'information.
+    </p>
+    <form class="vt-footer__news" onsubmit="return false;">
+      <input type="email" placeholder="Saisissez votre adresse mail" aria-label="Votre adresse mail" />
+      <button type="submit">S'abonner</button>
+    </form>
+    <div class="vt-footer__socials">
+      <a href="#" title="Facebook" rel="noopener noreferrer"><i class="bi bi-facebook"></i></a>
+      <a href="#" title="Instagram" rel="noopener noreferrer"><i class="bi bi-instagram"></i></a>
+      <a href="#" title="LinkedIn" rel="noopener noreferrer"><i class="bi bi-linkedin"></i></a>
+    </div>
+  </div>
+  <div class="vt-footer__bottom vt-container">
+    &copy; {year} <strong>Verdure et Terreau</strong>. Tous droits réservés.
+  </div>
+</footer>
+
+<style is:global>
+  .vt-footer {
+    position: relative;
+    background: url('/assets/img/footer-bg.jpg') center / cover;
+    color: #fff;
+    font-size: 14px;
+  }
+  .vt-footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--vt-overlay-footer);
+  }
+
+  .vt-footer__inner {
+    position: relative;
+    padding: 70px 0;
+    text-align: center;
+  }
+  .vt-footer__title {
+    font-family: var(--vt-font-display);
+    font-size: var(--vt-fs-h1);
+    font-weight: 700;
+    color: #fff;
+  }
+  .vt-footer__tag {
+    font-style: italic;
+    margin: 18px 0 28px;
+    opacity: 0.85;
+    color: #fff;
+  }
+
+  .vt-footer__news {
+    background: #fff;
+    border-radius: var(--vt-radius-pill);
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 6px 6px 18px;
+    width: 100%;
+    max-width: 460px;
+  }
+  .vt-footer__news input {
+    border: 0;
+    outline: 0;
+    flex: 1;
+    font-family: var(--vt-font-body);
+    font-size: 14px;
+    background: transparent;
+    color: var(--vt-body);
+    min-width: 0;
+  }
+  .vt-footer__news button {
+    background: var(--vt-green);
+    color: #fff;
+    border: 0;
+    border-radius: var(--vt-radius-pill);
+    padding: 8px 22px;
+    font-family: var(--vt-font-body);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background var(--vt-dur-fast);
+    white-space: nowrap;
+  }
+  .vt-footer__news button:hover { background: var(--vt-green-dark); }
+
+  .vt-footer__socials {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 26px;
+  }
+  .vt-footer__socials a {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--vt-green);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background var(--vt-dur-fast);
+  }
+  .vt-footer__socials a:hover { background: var(--vt-green-dark); color: #fff; }
+
+  .vt-footer__bottom {
+    position: relative;
+    border-top: 1px solid var(--vt-line-2);
+    padding: 24px 0;
+    font-size: 13px;
+    text-align: center;
+    color: #ddd;
+  }
+
+  @media (max-width: 600px) {
+    .vt-footer__news {
+      flex-direction: column;
+      align-items: stretch;
+      border-radius: var(--vt-radius-md);
+      padding: 12px;
+      gap: 8px;
+    }
+    .vt-footer__news button { width: 100%; padding: 10px; }
+  }
+</style>

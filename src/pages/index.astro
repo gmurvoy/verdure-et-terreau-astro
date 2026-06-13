@@ -1,17 +1,108 @@
 ---
+import { getEntry } from 'astro:content';
+import Layout  from '../layouts/Layout.astro';
+import Header  from '../components/Header.astro';
+import Footer  from '../components/Footer.astro';
+import Hero    from '../components/sections/Hero.astro';
+import About   from '../components/sections/About.astro';
+import WhyUs   from '../components/sections/WhyUs.astro';
+import Services from '../components/sections/Services.astro';
+import Portfolio from '../components/sections/Portfolio.astro';
+import Faq     from '../components/sections/Faq.astro';
+import Contact from '../components/sections/Contact.astro';
 
+// Métadonnées SEO de la page
+const meta      = await getEntry('pages',    'index');
+const hero      = await getEntry('sections', 'hero');
+const about     = await getEntry('sections', 'about');
+const whyus     = await getEntry('sections', 'why-us');
+const services  = await getEntry('sections', 'services');
+const portfolio = await getEntry('sections', 'portfolio');
+const faq       = await getEntry('sections', 'faq');
+const contact   = await getEntry('sections', 'contact');
+
+// Cast des données frontmatter (schemas Zod ajoutés en Phase 4)
+type D = Record<string, any>;
+const metaD      = meta!.data      as D;
+const heroD      = hero!.data      as D;
+const aboutD     = about!.data     as D;
+const whyusD     = whyus!.data     as D;
+const servicesD  = services!.data  as D;
+const portfolioD = portfolio!.data as D;
+const faqD       = faq!.data       as D;
+const contactD   = contact!.data   as D;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+  title={metaD.title}
+  description={metaD.description}
+  keywords={metaD.keywords}
+>
+
+  <Header />
+
+  <main id="main">
+    <Hero
+      heading={heroD.heading}
+      subheading={heroD.subheading}
+      cta_label={heroD.cta_label}
+      cta_href={heroD.cta_href}
+    />
+
+    <About
+      eyebrow={aboutD.eyebrow}
+      paragraphs={aboutD.paragraphs}
+      closing={aboutD.closing}
+      pillars={aboutD.pillars}
+    />
+
+    <WhyUs
+      eyebrow={whyusD.eyebrow}
+      heading={whyusD.heading}
+      heading_span={whyusD.heading_span}
+      sub={whyusD.sub}
+      cards={whyusD.cards}
+    />
+
+    <Services
+      eyebrow={servicesD.eyebrow}
+      heading={servicesD.heading}
+      heading_span={servicesD.heading_span}
+      sub={servicesD.sub}
+      tiles={servicesD.tiles}
+    />
+
+    <Portfolio
+      eyebrow={portfolioD.eyebrow}
+      heading={portfolioD.heading}
+      heading_span={portfolioD.heading_span}
+      sub={portfolioD.sub}
+      filters={portfolioD.filters}
+      items={portfolioD.items}
+    />
+
+    <Faq
+      eyebrow={faqD.eyebrow}
+      heading={faqD.heading}
+      heading_span={faqD.heading_span}
+      sub={faqD.sub}
+      items={faqD.items}
+    />
+
+    <Contact
+      eyebrow={contactD.eyebrow}
+      heading={contactD.heading}
+      heading_span={contactD.heading_span}
+      sub={contactD.sub}
+      map_img={contactD.map_img}
+      map_alt={contactD.map_alt}
+      address={contactD.address}
+      email={contactD.email}
+      phone={contactD.phone}
+      formspree_id={contactD.formspree_id}
+      formspree_redirect={contactD.formspree_redirect}
+    />
+  </main>
+
+  <Footer />
+</Layout>

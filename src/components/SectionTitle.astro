@@ -1,0 +1,21 @@
+---
+interface Props {
+  eyebrow: string;
+  head: string;
+  span?: string;
+  sub?: string;
+}
+const { eyebrow, head, span, sub } = Astro.props;
+const [before, after] = span ? head.split(span) : [head, undefined];
+---
+
+<div class="vt-section-title">
+  <div class="vt-section-title__eyebrow">{eyebrow}</div>
+  <h2 class="vt-section-title__head">
+    {span
+      ? <>{before}<span>{span}</span>{after}</>
+      : head
+    }
+  </h2>
+  {sub && <p class="vt-section-title__sub">{sub}</p>}
+</div>

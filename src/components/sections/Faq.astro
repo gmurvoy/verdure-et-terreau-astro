@@ -1,0 +1,111 @@
+---
+import SectionTitle from '../SectionTitle.astro';
+
+interface FaqItem {
+  question: string;
+  answer:   string;
+  open?:    boolean;
+}
+interface Props {
+  eyebrow:      string;
+  heading:      string;
+  heading_span: string;
+  sub:          string;
+  items:        FaqItem[];
+}
+const { eyebrow, heading, heading_span, sub, items } = Astro.props;
+---
+
+<section id="faq" class="vt-section vt-section--fog">
+  <div class="vt-container">
+    <SectionTitle eyebrow={eyebrow} head={heading} span={heading_span} sub={sub} />
+    <div class="vt-faq__list" id="vt-faq-list">
+      {items.map((item, i) => (
+        <div class={`vt-faq__item${item.open ? ' is-open' : ''}`} data-faq-index={i}>
+          <i class="vt-faq__help bi bi-question-circle"></i>
+          <p class="vt-faq__q">
+            {item.question}
+            <span class="vt-faq__chevron bi bi-chevron-down"></span>
+          </p>
+          <div class="vt-faq__a" set:html={item.answer} />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.getElementById('vt-faq-list')?.querySelectorAll('.vt-faq__item').forEach(item => {
+    item.addEventListener('click', () => {
+      const isOpen = item.classList.contains('is-open');
+      // Ferme tous
+      document.querySelectorAll('.vt-faq__item').forEach(el => {
+        el.classList.remove('is-open');
+        el.querySelector('.vt-faq__chevron')?.classList.replace('bi-chevron-up', 'bi-chevron-down');
+      });
+      // Ouvre le cliqué s'il était fermé
+      if (!isOpen) {
+        item.classList.add('is-open');
+        item.querySelector('.vt-faq__chevron')?.classList.replace('bi-chevron-down', 'bi-chevron-up');
+      }
+    });
+  });
+</script>
+
+<style is:global>
+  .vt-faq__list { max-width: 900px; margin: 0 auto; }
+
+  .vt-faq__item {
+    background: #fff;
+    border-radius: var(--vt-radius-sm);
+    padding: 18px 20px 18px 60px;
+    margin-bottom: 14px;
+    position: relative;
+    cursor: pointer;
+  }
+  .vt-faq__help {
+    position: absolute; left: 18px; top: 20px;
+    color: var(--vt-green-pale);
+    font-size: 22px;
+  }
+  .vt-faq__item.is-open .vt-faq__help { color: var(--vt-green); }
+
+  .vt-faq__q {
+    font-family: var(--vt-font-display);
+    font-size: 16px; font-weight: 500;
+    color: #343a40;
+    margin: 0;
+    padding-right: 30px;
+    position: relative;
+  }
+  .vt-faq__item.is-open .vt-faq__q { color: var(--vt-green); }
+
+  .vt-faq__chevron {
+    position: absolute; right: 0; top: 0;
+    font-size: 22px; color: var(--vt-mute-2);
+    line-height: 1;
+  }
+
+  .vt-faq__a {
+    display: none;
+    margin: 10px 0 0;
+    font-family: var(--vt-font-body);
+    font-size: 14px; line-height: 1.6;
+    color: var(--vt-body);
+  }
+  .vt-faq__item.is-open .vt-faq__a { display: block; }
+
+  .vt-faq__a p { margin: 0 0 10px; }
+  .vt-faq__a ul { list-style: none; padding: 0; margin: 8px 0; }
+  .vt-faq__a li { display: flex; align-items: center; gap: 8px; padding: 2px 0; }
+  .vt-text-icon { height: 18px; width: auto; }
+
+  .vt-faq__img {
+    float: right;
+    max-width: 180px;
+    margin: 0 0 12px 18px;
+  }
+  @media (max-width: 600px) {
+    .vt-faq__img { float: none; max-width: 100%; margin: 0 0 12px; }
+  }
+</style>

@@ -1,0 +1,70 @@
+---
+interface Props {
+  title?:       string;
+  description?: string;
+  keywords?:    string;
+  ogImage?:     string;
+}
+
+const {
+  title       = 'Verdure et Terreau — Permaculture à Saint-Coulomb',
+  description = 'Initiation à la permaculture, ateliers thématiques, création de potager et parcours scolaires en Bretagne, entre Saint-Malo et Cancale.',
+  keywords,
+  ogImage     = '/assets/img/logo-bg.png',
+} = Astro.props;
+
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="/assets/img/favicon.png" />
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" />
+
+    <!-- Google Fonts : Raleway + Open Sans + Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Poppins:wght@300;400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <slot />
+
+    <!-- Back to top -->
+    <a href="#" id="vt-bttop" aria-label="Retour en haut de page">
+      <i class="bi bi-arrow-up-short"></i>
+    </a>
+
+    <script>
+      const bttop = document.getElementById('vt-bttop');
+      window.addEventListener('scroll', () => {
+        bttop?.classList.toggle('is-visible', window.scrollY > 400);
+      });
+    </script>
+  </body>
+</html>

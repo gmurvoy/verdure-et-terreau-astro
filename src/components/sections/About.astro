@@ -1,0 +1,139 @@
+---
+interface Pillar {
+  title:     string;
+  icon:      string;
+  icon_hover: string;
+  body:      string;
+}
+interface Props {
+  eyebrow:    string;
+  paragraphs: string[];
+  closing:    string;
+  pillars:    Pillar[];
+}
+const { eyebrow, paragraphs, closing, pillars } = Astro.props;
+---
+
+<section id="about" class="vt-section vt-section--white">
+  <div class="vt-container vt-about__grid">
+
+    <!-- Colonne photo -->
+    <div class="vt-about__video">
+      <span class="vt-about__play" aria-hidden="true"></span>
+    </div>
+
+    <!-- Colonne texte + piliers -->
+    <div>
+      <div class="vt-about__heading">
+        <div class="vt-about__eyebrow">{eyebrow}</div>
+        <div class="vt-about__copy">
+          {paragraphs.map(p => <p set:html={p} />)}
+          <p set:html={closing} />
+        </div>
+      </div>
+
+      {pillars.map(p => (
+        <div class="vt-iconbox">
+          <div class="vt-iconbox__icon">
+            <img class="swap-out" src={p.icon}       alt="" width="32" height="32" />
+            <img class="swap-in"  src={p.icon_hover}  alt="" width="32" height="32" />
+          </div>
+          <div class="vt-iconbox__meta">
+            <h4>{p.title}</h4>
+            <p>{p.body}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>
+
+<style is:global>
+  .vt-about__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: stretch;
+  }
+  .vt-about__video {
+    background: url('/assets/img/about.jpg') center / cover;
+    min-height: 480px;
+    position: relative;
+  }
+  .vt-about__play {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 94px; height: 94px;
+    background: radial-gradient(#7da15f 50%, rgba(143,192,78,.4) 52%);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .vt-about__play::after {
+    content: "";
+    width: 0; height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 16px solid #fff;
+    margin-left: 4px;
+  }
+  .vt-about__play::before {
+    content: "";
+    position: absolute;
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    border: 5px solid rgba(143,192,78,.7);
+    animation: vt-pulse 2s infinite;
+  }
+  @keyframes vt-pulse {
+    0%   { transform: scale(.6); opacity: 1; }
+    100% { transform: scale(1);  opacity: 0; }
+  }
+  .vt-about__heading { padding: 8px 0; }
+  .vt-about__eyebrow {
+    display: inline-block;
+    font-family: var(--vt-font-body);
+    font-size: var(--vt-fs-pill);
+    font-weight: 700;
+    letter-spacing: var(--vt-tracking-pill);
+    padding: 8px 20px;
+    border-radius: var(--vt-radius-pill);
+    background: var(--vt-green-cloud);
+    color: var(--vt-green);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .vt-about__copy p { color: var(--vt-body); line-height: 1.7; font-size: 15px; margin: 0 0 14px; }
+  .vt-about__copy em { font-style: italic; color: var(--vt-olive); }
+
+  /* IconBox */
+  .vt-iconbox { display: flex; align-items: flex-start; gap: 22px; margin-top: 28px; }
+  .vt-iconbox__icon {
+    flex-shrink: 0;
+    width: 64px; height: 64px;
+    border: 2px solid var(--vt-green-pale);
+    border-radius: var(--vt-radius-pill);
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--vt-dur-base);
+  }
+  .vt-iconbox__icon img { width: 32px; height: 32px; transition: var(--vt-dur-fast); }
+  .vt-iconbox:hover .vt-iconbox__icon { background: var(--vt-green); border-color: var(--vt-green); }
+  .vt-iconbox__icon img.swap-in { display: none; }
+  .vt-iconbox:hover .vt-iconbox__icon img.swap-out { display: none; }
+  .vt-iconbox:hover .vt-iconbox__icon img.swap-in  { display: inline; }
+  .vt-iconbox__meta h4 {
+    font-family: var(--vt-font-heading);
+    font-size: var(--vt-fs-h5);
+    font-weight: 700;
+    color: var(--vt-olive);
+    margin: 0 0 8px;
+  }
+  .vt-iconbox:hover .vt-iconbox__meta h4 { color: var(--vt-green); }
+  .vt-iconbox__meta p { color: var(--vt-body); font-size: 14px; line-height: 1.55; margin: 0; }
+
+  @media (max-width: 991px) {
+    .vt-about__grid { grid-template-columns: 1fr; }
+    .vt-about__video { min-height: 320px; }
+  }
+</style>

@@ -1,0 +1,450 @@
+---
+import { getCollection } from 'astro:content';
+import Layout  from '../../layouts/Layout.astro';
+import Header  from '../../components/Header.astro';
+import Footer  from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('services');
+  return entries.map(entry => ({
+    params: { slug: entry.id },
+    props:  { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+type D = Record<string, any>;
+const d = entry.data as D;
+
+// Saison courante (calculée au build-time)
+const month = new Date().getMonth() + 1;
+const currentSeason = month >= 3 && month <= 5 ? 'printemps'
+                    : month >= 6 && month <= 8 ? 'ete'
+                    : month >= 9 && month <= 11 ? 'automne'
+                    : 'hiver';
+
+const rawGallery = (d.gallery as any[] | undefined) ?? [];
+const featuredImg = d.gallery_layout === 'grid'
+  ? (rawGallery.find((img: any) => img.season === currentSeason) ?? null)
+  : null;
+const gridImgs = d.gallery_layout === 'grid'
+  ? rawGallery.filter((img: any) => img.season !== currentSeason)
+  : rawGallery;
+---
+
+<Layout title={d.title} description={d.description} keywords={d.keywords}>
+  <Header />
+
+  <main id="main">
+
+    <!-- Breadcrumbs -->
+    <section class="breadcrumbs">
+      <div class="vt-container">
+        <div class="breadcrumbs__row">
+          <h2>{d.breadcrumb}</h2>
+          <ol>
+            <li><a href="/">Accueil</a></li>
+            <li>{d.breadcrumb}</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== INNER PAGE (initiation, ateliers, conception) ===== -->
+    {d.layout_type === 'inner-page' && (
+      <section class="inner-page">
+        <div class="vt-container">
+
+          {featuredImg && (
+            <img
+              src={featuredImg.src}
+              alt={featuredImg.alt}
+              class="svc-seasonal-feature"
+              loading="eager"
+            />
+          )}
+
+          <div class="inner-page__body" set:html={d.content_html} />
+
+          {gridImgs.length > 0 && (
+            <div class:list={['svc-gallery', { 'svc-gallery--grid': d.gallery_layout === 'grid' }]}>
+              {gridImgs.map((img: any) => (
+                <img src={img.src} alt={img.alt} loading="lazy" />
+              ))}
+            </div>
+          )}
+
+          {d.gallery_groups && (
+            <div class="svc-gallery-groups">
+              {(d.gallery_groups as any[]).map((g: any) => (
+                <div class="gallery-group">
+                  <h3>{g.title}</h3>
+                  <div class="gallery-group__imgs">
+                    <img src={g.before} alt="" loading="lazy" />
+                    <img src={g.after} alt="" loading="lazy" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div class="svc-cta">
+            <a href="/#contact" class="btn-contact">Contactez-moi</a>
+          </div>
+
+        </div>
+      </section>
+    )}
+
+    <!-- ===== PARCOURS SCOLAIRE (portfolio filtrable) ===== -->
+    {d.layout_type === 'portfolio-page' && (
+      <section class="parcours-section">
+        <div class="vt-container">
+
+          <div class="parcours-title">
+            <h2 class="parcours-title__label">{d.section_heading}</h2>
+            <h3 class="parcours-title__head" set:html={d.section_heading_h3} />
+            <p class="parcours-title__sub" set:html={d.section_sub} />
+          </div>
+
+          <div class="parcours-intro" set:html={d.intro_html} />
+
+          <div class="parcours-filters">
+            {(d.filters as any[]).map((f: any, i: number) => (
+              <button
+                class={'parcours-filter-btn' + (i === 0 ? ' is-active' : '')}
+                data-filter={f.id}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+
+          <div class="parcours-grid">
+            {(d.items as any[]).map((item: any) => (
+              <div class="parcours-item" data-filter={item.filter}>
+                <img src={item.src} alt={item.alt} loading="lazy" />
+              </div>
+            ))}
+          </div>
+
+          <div class="svc-cta">
+            <a href="/#contact" class="btn-contact">Contactez-moi</a>
+          </div>
+
+        </div>
+      </section>
+    )}
+
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  const filterBtns  = document.querySelectorAll<HTMLButtonElement>('.parcours-filter-btn');
+  const filterItems = document.querySelectorAll<HTMLElement>('.parcours-item');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      const filter = btn.dataset.filter;
+      filterItems.forEach(item => {
+        item.style.display = (filter === '*' || item.dataset.filter === filter) ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+<!-- Styles scoped (éléments du template) -->
+<style>
+  /* ===== BREADCRUMBS ===== */
+  .breadcrumbs {
+    padding: 20px 0;
+    background: #f9f9f9;
+    border-bottom: 1px solid #ededed;
+  }
+  .breadcrumbs__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .breadcrumbs h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--vt-olive);
+    margin: 0;
+  }
+  .breadcrumbs ol {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--vt-mute-2);
+  }
+  .breadcrumbs ol li + li::before {
+    content: "/";
+    padding: 0 6px;
+    color: #bbb;
+  }
+  .breadcrumbs a { color: var(--vt-green); }
+  .breadcrumbs a:hover { text-decoration: underline; }
+
+  /* ===== INNER PAGE ===== */
+  .inner-page { padding: 60px 0 40px; }
+
+  /* Gallery — version inline (initiation, conception) */
+  .svc-gallery {
+    clear: both;
+    margin: 2rem 0;
+  }
+  .svc-gallery img {
+    display: inline-block;
+    max-width: 100%;
+    vertical-align: top;
+    margin-right: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Affiche saisonnière en exergue (ateliers) */
+  .svc-seasonal-feature {
+    float: right;
+    width: 300px;
+    height: auto;
+    margin: 0 0 1.5rem 2rem;
+    display: block;
+  }
+
+  /* Gallery — version grille (ateliers, 3 affiches restantes) */
+  .svc-gallery--grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    clear: both;
+  }
+  .svc-gallery--grid img {
+    display: block;
+    width: 300px;
+    height: auto;
+    object-fit: contain;
+    margin: 0;
+  }
+
+  /* Galerie avant/après (conception) */
+  .svc-gallery-groups { clear: both; margin: 2rem 0; }
+  .gallery-group { margin-bottom: 2rem; }
+  .gallery-group h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--vt-olive);
+    margin-bottom: 0.75rem;
+  }
+  .gallery-group__imgs {
+    display: flex;
+    gap: 1rem;
+  }
+  .gallery-group__imgs img {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 260px;
+    width: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* CTA */
+  .svc-cta {
+    clear: both;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--vt-line);
+  }
+  .btn-contact {
+    display: inline-block;
+    padding: 12px 32px;
+    background: var(--vt-green);
+    color: #fff;
+    font-family: var(--vt-font-display);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: background var(--vt-dur-fast);
+  }
+  .btn-contact:hover { background: var(--vt-green-dark); color: #fff; }
+
+  /* ===== PARCOURS SCOLAIRE ===== */
+  .parcours-section { padding: 60px 0; }
+
+  .parcours-title { text-align: center; margin-bottom: 2rem; }
+  .parcours-title__label {
+    font-size: var(--vt-fs-h3);
+    font-weight: 700;
+    color: var(--vt-olive);
+    margin-bottom: 0.5rem;
+  }
+  .parcours-title__head {
+    font-size: var(--vt-fs-h2);
+    font-weight: 700;
+    color: var(--vt-olive);
+    margin-bottom: 0.5rem;
+  }
+  .parcours-title__sub {
+    font-size: var(--vt-fs-small);
+    color: var(--vt-mute-2);
+    line-height: 1.6;
+  }
+
+  .parcours-filters {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 2rem 0 1.5rem;
+  }
+  .parcours-filter-btn {
+    padding: 8px 22px;
+    border: 2px solid var(--vt-green);
+    background: transparent;
+    color: var(--vt-green);
+    font-family: var(--vt-font-display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 50px;
+    transition: all var(--vt-dur-fast);
+  }
+  .parcours-filter-btn:hover,
+  .parcours-filter-btn.is-active {
+    background: var(--vt-green);
+    color: #fff;
+  }
+
+  .parcours-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .parcours-item img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .breadcrumbs__row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .svc-seasonal-feature { float: none; width: 100%; margin: 0 0 1.5rem; }
+    .svc-gallery--grid { flex-direction: column; align-items: center; }
+    .svc-gallery--grid img { width: 100%; max-width: 300px; }
+    .parcours-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-group__imgs { flex-direction: column; }
+    .gallery-group__imgs img { height: 220px; flex: none; width: 100%; }
+  }
+
+  @media (max-width: 480px) {
+    .parcours-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<!-- Styles globaux pour le contenu injecté via set:html -->
+<style is:global>
+  /* ===== INNER PAGE body ===== */
+  .inner-page__body h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--vt-olive);
+    margin-bottom: 1.25rem;
+  }
+  .inner-page__body h2 {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--vt-olive);
+    margin: 2rem 0 1rem;
+  }
+  .inner-page__body h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--vt-olive);
+    margin: 1.5rem 0 0.75rem;
+  }
+  .inner-page__body p {
+    line-height: 1.75;
+    margin-bottom: 1rem;
+    color: var(--vt-body);
+  }
+  .inner-page__body ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .inner-page__body ul li {
+    line-height: 1.75;
+    margin-bottom: 0.4rem;
+    color: var(--vt-body);
+  }
+  .inner-page__body blockquote {
+    text-align: center;
+    border-left: 4px solid var(--vt-green);
+    background: #eef5e8;
+    margin: 2rem auto;
+    padding: 1.5rem 2rem;
+    max-width: 600px;
+    color: var(--vt-mute-2);
+    font-size: 1rem;
+  }
+  .inner-page__body blockquote em {
+    font-style: italic;
+    line-height: 2;
+  }
+  .inner-page__body img.align-right {
+    float: right;
+    max-width: 42%;
+    margin: 0 0 1.5rem 2rem;
+  }
+  .inner-page__body img:not(.align-right) {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Responsive float */
+  @media (max-width: 768px) {
+    .inner-page__body img.align-right {
+      float: none;
+      max-width: 100%;
+      margin: 0 0 1.5rem;
+    }
+  }
+
+  /* ===== PARCOURS intro & title ===== */
+  .parcours-title__head span { color: var(--vt-green); }
+
+  .parcours-intro p {
+    line-height: 1.75;
+    margin-bottom: 1rem;
+    color: var(--vt-body);
+  }
+  .parcours-intro ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .parcours-intro ul li {
+    line-height: 1.75;
+    margin-bottom: 0.3rem;
+    color: var(--vt-body);
+  }
+  .parcours-intro .text-icon {
+    display: inline !important;
+    height: 20px;
+    width: auto;
+    max-width: none;
+    vertical-align: middle;
+    margin: 0 3px;
+  }
+</style>

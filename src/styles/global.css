@@ -1,0 +1,144 @@
+/*
+ * Verdure et Terreau — Styles globaux
+ * Reset, base, utilitaires réutilisés sur toutes les pages.
+ */
+
+@import './tokens.css';
+
+/* ===== RESET =========================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; scroll-behavior: smooth; }
+img, svg { max-width: 100%; display: block; }
+ul, ol { margin: 0; padding: 0; }
+button { cursor: pointer; }
+
+/* ===== BASE ============================================================ */
+body {
+  font-family: var(--vt-font-body);
+  font-size: var(--vt-fs-body);
+  color: var(--vt-body);
+  background: var(--vt-bg);
+  line-height: var(--vt-lh-normal);
+}
+
+a {
+  color: var(--vt-green);
+  text-decoration: none;
+  transition: color var(--vt-dur-fast);
+}
+a:hover { color: var(--vt-green-light); }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--vt-font-heading);
+  color: var(--vt-olive);
+  margin: 0;
+  line-height: var(--vt-lh-snug);
+}
+h1 { font-size: var(--vt-fs-h1); font-weight: 700; }
+h2 { font-size: var(--vt-fs-h2); font-weight: 700; }
+h3 { font-size: var(--vt-fs-h3); font-weight: 700; }
+h4 { font-size: var(--vt-fs-h4); font-weight: 700; }
+h5 { font-size: var(--vt-fs-h5); font-weight: 700; }
+
+p { font-size: var(--vt-fs-body); line-height: var(--vt-lh-normal); margin: 0; }
+small { font-size: var(--vt-fs-xs); color: var(--vt-mute-2); }
+em { font-style: italic; }
+
+/* ===== CONTENEUR ======================================================= */
+.vt-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ===== SECTIONS ======================================================== */
+.vt-section { padding: 60px 0; overflow: hidden; }
+.vt-section--fog { background: var(--vt-green-fog); }
+.vt-section--white { background: #fff; }
+.vt-section--grey { background: var(--vt-bg-grey); }
+
+/* ===== SECTION TITLE (eyebrow + h2 + sous-titre) ====================== */
+.vt-section-title { text-align: center; padding-bottom: 30px; }
+
+.vt-section-title__eyebrow {
+  display: inline-block;
+  font-family: var(--vt-font-body);
+  font-size: var(--vt-fs-pill);
+  font-weight: 700;
+  letter-spacing: var(--vt-tracking-pill);
+  text-transform: uppercase;
+  padding: 8px 20px;
+  border-radius: var(--vt-radius-pill);
+  background: var(--vt-green-cloud);
+  color: var(--vt-green);
+  margin-bottom: 16px;
+}
+.vt-section--fog .vt-section-title__eyebrow { background: var(--vt-green-cream); }
+
+.vt-section-title__head {
+  font-family: var(--vt-font-heading);
+  font-size: var(--vt-fs-h2);
+  font-weight: 700;
+  color: var(--vt-olive);
+}
+.vt-section-title__head span { color: var(--vt-green); }
+
+.vt-section-title__sub {
+  font-family: var(--vt-font-body);
+  font-size: var(--vt-fs-small);
+  font-weight: 600;
+  color: var(--vt-body);
+  margin: 16px auto 0;
+  max-width: 560px;
+  line-height: 1.5;
+}
+
+/* ===== BOUTONS ========================================================= */
+.vt-btn {
+  display: inline-block;
+  padding: 8px 28px;
+  font-family: var(--vt-font-heading);
+  font-size: var(--vt-fs-body);
+  font-weight: 500;
+  letter-spacing: var(--vt-tracking-pill);
+  border-radius: var(--vt-radius-pill);
+  border: 2px solid var(--vt-green);
+  color: var(--vt-green);
+  background: transparent;
+  transition: all var(--vt-dur-slow);
+}
+.vt-btn:hover { background: var(--vt-green-cloud); color: var(--vt-green); }
+
+.vt-btn--solid {
+  background: var(--vt-green);
+  color: #fff;
+  border-color: var(--vt-green);
+}
+.vt-btn--solid:hover {
+  background: var(--vt-green-dark);
+  border-color: var(--vt-green-dark);
+  color: #fff;
+}
+
+/* ===== BACK TO TOP ===================================================== */
+#vt-bttop {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 40px;
+  height: 40px;
+  background: var(--vt-green);
+  color: #fff;
+  border-radius: var(--vt-radius-pill);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+  z-index: 996;
+  transition: background var(--vt-dur-base);
+  border: 0;
+  text-decoration: none;
+}
+#vt-bttop.is-visible { display: flex; }
+#vt-bttop:hover { background: var(--vt-green-dark); color: #fff; }

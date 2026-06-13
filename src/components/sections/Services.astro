@@ -1,0 +1,79 @@
+---
+import SectionTitle from '../SectionTitle.astro';
+
+interface Tile {
+  title: string;
+  icon:  string;
+  sub:   string;
+  href:  string;
+}
+interface Props {
+  eyebrow:      string;
+  heading:      string;
+  heading_span: string;
+  sub:          string;
+  tiles:        Tile[];
+}
+const { eyebrow, heading, heading_span, sub, tiles } = Astro.props;
+---
+
+<section id="services" class="vt-section vt-section--white">
+  <div class="vt-container">
+    <SectionTitle eyebrow={eyebrow} head={heading} span={heading_span} sub={sub} />
+    <div class="vt-services__grid">
+      {tiles.map(tile => (
+        <div class="vt-service-tile">
+          <div class="vt-service-tile__icon">
+            <img src={tile.icon} alt="" width="32" height="32" />
+          </div>
+          <h3><a href={tile.href}>{tile.title}</a></h3>
+          <p>{tile.sub}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .vt-services__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  .vt-service-tile {
+    background: #fff;
+    border: 1px solid var(--vt-green-tint);
+    padding: 60px 20px;
+    text-align: center;
+    transition: all .3s ease-in-out;
+  }
+  .vt-service-tile__icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 18px;
+    background: var(--vt-green-cloud);
+    border: 1px solid var(--vt-green-pale);
+    border-radius: var(--vt-radius-pill);
+    display: flex; align-items: center; justify-content: center;
+    transition: .3s;
+  }
+  .vt-service-tile__icon img { width: 32px; height: 32px; opacity: .55; transition: .3s; }
+  .vt-service-tile h3 {
+    font-family: var(--vt-font-heading);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--vt-olive);
+    margin: 0 0 8px;
+  }
+  .vt-service-tile h3 a { color: inherit; }
+  .vt-service-tile p { font-size: 14px; color: var(--vt-mute-2); margin: 0; }
+
+  .vt-service-tile:hover { border-color: #fff; box-shadow: var(--vt-shadow-soft); }
+  .vt-service-tile:hover h3,
+  .vt-service-tile:hover h3 a { color: var(--vt-green); }
+  .vt-service-tile:hover .vt-service-tile__icon { border-color: var(--vt-green); }
+  .vt-service-tile:hover .vt-service-tile__icon img { opacity: 1; }
+
+  @media (max-width: 767px) {
+    .vt-services__grid { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .vt-services__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
